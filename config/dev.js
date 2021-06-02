@@ -1,3 +1,4 @@
+// Database Name
 module.exports = {
-  'dbURL': 'mongodb://localhost:27017',
+    'dbURL': 'mongodb+srv://treelo:oleert@sprint4ca.qnzxp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
 }
