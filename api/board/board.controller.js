@@ -23,7 +23,6 @@ async function deleteBoard(req, res) {
     }
 }
 
-
 async function addBoard(req, res) {
     try {
         var board = req.body
@@ -46,8 +45,23 @@ async function addBoard(req, res) {
     }
 }
 
+
+async function updateBoard(req, res) {
+    try {
+        const board = req.body
+        console.log('updateBoard', board)
+        const savedBoard = await boardService.update(board)
+        res.send(savedBoard)
+        // socketService.broadcast({ type: 'board-updated', data: board, to: savedBoard._id })
+    } catch (err) {
+        logger.error('Failed to update board', err)
+        res.status(500).send({ err: 'Failed to update board' })
+    }
+}
+
 module.exports = {
     getBoards,
     deleteBoard,
-    addBoard
+    addBoard,
+    updateBoard
 }

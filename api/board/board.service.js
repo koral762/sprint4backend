@@ -35,7 +35,6 @@ async function remove(boardId) {
 
 async function add(board) {
     try {
-        // peek only updatable fields!
         const boardToAdd = {
             byUserId: ObjectId(board.byUserId),
             aboutUserId: ObjectId(board.aboutUserId),
@@ -50,6 +49,24 @@ async function add(board) {
     }
 }
 
+async function update(board) {
+    console.log('board-service update', board)
+    try {
+        // peek only updatable fields!
+        const boardToSave = {
+            ...board,
+            _id: ObjectId(board._id)
+        }
+        const collection = await dbService.getCollection('board')
+        await collection.updateOne({ '_id': boardToSave._id }, { $set: boardToSave })
+        return boardToSave;
+    } catch (err) {
+        logger.error(`cannot update board ${board._id}`, err)
+        throw err
+    }
+}
+
+
 function _buildCriteria(filterBy) {
     const criteria = {}
     return criteria
@@ -58,5 +75,6 @@ function _buildCriteria(filterBy) {
 module.exports = {
     query,
     remove,
-    add
+    add,
+    update
 }
