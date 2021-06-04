@@ -32,6 +32,17 @@ async function remove(boardId) {
     }
 }
 
+async function getById(boardId) {
+    try {
+        const collection = await dbService.getCollection('board')
+        const board = await collection.findOne({ '_id': ObjectId(boardId) })
+
+        return board
+    } catch (err) {
+        logger.error(`while finding board ${boardId}`, err)
+        throw err
+    }
+}
 
 async function add(board) {
     try {
@@ -50,7 +61,6 @@ async function add(board) {
 }
 
 async function update(board) {
-    console.log('board-service update', board)
     try {
         // peek only updatable fields!
         const boardToSave = {
@@ -76,5 +86,6 @@ module.exports = {
     query,
     remove,
     add,
-    update
+    update,
+    getById
 }

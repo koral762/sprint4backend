@@ -12,6 +12,15 @@ async function getBoards(req, res) {
         res.status(500).send({ err: 'Failed to get board' })
     }
 }
+async function getBoard(req, res) {
+    try {
+        const board = await boardService.getById(req.params.id)
+        res.send(board)
+    } catch (err) {
+        logger.error('Cannot get board', err)
+        res.status(500).send({ err: 'Failed to get board' })
+    }
+}
 
 async function deleteBoard(req, res) {
     try {
@@ -33,7 +42,6 @@ async function addBoard(req, res) {
         board.byUser = await userService.getById(board.byUserId)
         board.aboutUser = await userService.getById(board.aboutUserId)
 
-        console.log('CTRL SessionId:', req.sessionID);
         socketService.broadcast({ type: 'board-added', data: board })
         socketService.emitToAll({ type: 'user-updated', data: board.byUser, room: req.session.user._id })
         res.send(board)
@@ -63,5 +71,6 @@ module.exports = {
     getBoards,
     deleteBoard,
     addBoard,
-    updateBoard
+    updateBoard,
+    getBoard
 }
