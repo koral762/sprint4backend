@@ -1,5 +1,3 @@
-
-
 const asyncLocalStorage = require('./als.service');
 const logger = require('./logger.service');
 
@@ -25,25 +23,23 @@ function connectSockets(http, session) {
                 gSocketBySessionIdMap[socket.handshake.sessionID] = null
             }
         })
-        socket.on('chat topic', topic => {
-            if (socket.myTopic === topic) return;
+        socket.on('join board', boardId => {
+            console.log('join board', boardId);
+            if (socket.myTopic === boardId) return;
             if (socket.myTopic) {
                 socket.leave(socket.myTopic)
             }
-            socket.join(topic)
-            // logger.debug('Session ID is', socket.handshake.sessionID)
-            socket.myTopic = topic
+            socket.join(boardId)
+            logger.debug('Session ID is', socket.handshake.sessionID)
+            socket.myTopic = boardId
+            console.log('socket.myTopic',socket.myTopic);
         })
-        socket.on('chat newMsg', msg => {
-            // emits to all sockets:
-            // gIo.emit('chat addMsg', msg)
-            // emits only to sockets in the same room
-            gIo.to(socket.myTopic).emit('chat addMsg', msg)
+        socket.on('board updated', board => {
+            console.log('@@@@@@@@@@2');
+            gIo.emit('updated board', board)
+            // socket.to(socket.myTopic).emit('updated board', 'board')
         })
-        socket.on('user-watch', userId => {
-            socket.join(userId)
-        })
-
+     
     })
 }
 
@@ -62,8 +58,10 @@ function emitToUser({ type, data, userId }) {
 function broadcast({ type, data, room = null }) {
     const store = asyncLocalStorage.getStore()
     const { sessionId } = store
+    console.log('sessionId',sessionId);
     if (!sessionId) return logger.debug('Shoudnt happen, no sessionId in asyncLocalStorage store')
     const excludedSocket = gSocketBySessionIdMap[sessionId]
+    // console.log('excludedSocket',excludedSocket);
     if (!excludedSocket) return logger.debug('Shouldnt happen, No socket in map')
     if (room) excludedSocket.broadcast.to(room).emit(type, data)
     else excludedSocket.broadcast.emit(type, data)
