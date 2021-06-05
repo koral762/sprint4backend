@@ -13,18 +13,18 @@ function connectSockets(http, session) {
         autoSave: true
     }));
     gIo.on('connection', socket => {
-        console.log('New socket - socket.handshake.sessionID', socket.handshake.sessionID)
+        // console.log('New socket - socket.handshake.sessionID', socket.handshake.sessionID)
         gSocketBySessionIdMap[socket.handshake.sessionID] = socket
         // TODO: emitToUser feature - need to tested for CaJan21
         // if (socket.handshake?.session?.user) socket.join(socket.handshake.session.user._id)
         socket.on('disconnect', socket => {
-            console.log('Someone disconnected')
+            // console.log('Someone disconnected')
             if (socket.handshake) {
                 gSocketBySessionIdMap[socket.handshake.sessionID] = null
             }
         })
         socket.on('join board', boardId => {
-            console.log('join board', boardId);
+            // console.log('join board', boardId);
             if (socket.myTopic === boardId) return;
             if (socket.myTopic) {
                 socket.leave(socket.myTopic)
@@ -32,10 +32,9 @@ function connectSockets(http, session) {
             socket.join(boardId)
             logger.debug('Session ID is', socket.handshake.sessionID)
             socket.myTopic = boardId
-            console.log('socket.myTopic',socket.myTopic);
+            // console.log('socket.myTopic',socket.myTopic);
         })
-        socket.on('board updated', board => {
-            console.log('@@@@@@@@@@2');
+        socket.on('updated board', board => {
             gIo.emit('updated board', board)
             // socket.to(socket.myTopic).emit('updated board', 'board')
         })
@@ -58,7 +57,7 @@ function emitToUser({ type, data, userId }) {
 function broadcast({ type, data, room = null }) {
     const store = asyncLocalStorage.getStore()
     const { sessionId } = store
-    console.log('sessionId',sessionId);
+    // console.log('sessionId',sessionId);
     if (!sessionId) return logger.debug('Shoudnt happen, no sessionId in asyncLocalStorage store')
     const excludedSocket = gSocketBySessionIdMap[sessionId]
     // console.log('excludedSocket',excludedSocket);
