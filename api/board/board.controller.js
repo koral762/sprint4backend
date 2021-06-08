@@ -1,4 +1,4 @@
-const logger = require('../../services/logger.service')
+// const logger = require('../../services/logger.service')
 const userService = require('../user/user.service')
 const socketService = require('../../services/socket.service')
 const boardService = require('./board.service')
@@ -35,15 +35,16 @@ async function deleteBoard(req, res) {
 async function addBoard(req, res) {
     try {
         var board = req.body
-        board.byUserId = req.session.user._id
+        console.log('koral',board);
+        // board.byUserId = req.session.user._id
         board = await boardService.add(board)
 
         // prepare the updated board for sending out
-        board.byUser = await userService.getById(board.byUserId)
-        board.aboutUser = await userService.getById(board.aboutUserId)
+        // board.byUser = await userService.getById(board.byUserId)
+        // board.aboutUser = await userService.getById(board.aboutUserId)
 
-        socketService.broadcast({ type: 'board-added', data: board })
-        socketService.emitToAll({ type: 'user-updated', data: board.byUser, room: req.session.user._id })
+        // socketService.broadcast({ type: 'board-added', data: board })
+        // socketService.emitToAll({ type: 'user-updated', data: board.byUser, room: req.session.user._id })
         res.send(board)
 
     } catch (err) {

@@ -47,8 +47,8 @@ async function getById(boardId) {
 async function add(board) {
     try {
         const boardToAdd = {
-            byUserId: ObjectId(board.byUserId),
-            aboutUserId: ObjectId(board.aboutUserId),
+            // byUserId: ObjectId(board.byUserId),
+            // aboutUserId: ObjectId(board.aboutUserId),
             txt: board.txt
         }
         const collection = await dbService.getCollection('board')
