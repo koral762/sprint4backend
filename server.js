@@ -61,7 +61,7 @@ app.get('/**',(req, res)=>{
     res.sendFile(path.join(__dirname, 'public','index.html'))
 })
 
-app.listen(port,()=>{
+http.listen(port,()=>{
     console.log('App listening on port: ' + port)
 })
 
