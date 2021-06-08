@@ -15,6 +15,7 @@ const session = expressSession({
     // Express App Config
 app.use(express.json())
 app.use(session)
+app.use(express.static('public'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'public')))
@@ -57,5 +58,13 @@ const logger = require('./services/logger.service')
 const port = process.env.PORT || 3030
 http.listen(port, () => {
     logger.info('Server is running on port: ' + port)
+})
+
+app.get('/**',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'public','index.html'))
+})
+
+app.listen(port,()=>{
+    console.log('App listening on port: ' + port)
 })
 
