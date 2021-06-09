@@ -35,7 +35,6 @@ async function deleteBoard(req, res) {
 async function addBoard(req, res) {
     try {
         var board = req.body
-        console.log('koral',board);
         // board.byUserId = req.session.user._id
         board = await boardService.add(board)
 
