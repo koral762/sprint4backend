@@ -7,13 +7,13 @@ const app = express()
 const http = require('http').createServer(app)
 
 const session = expressSession({
-        secret: 'coding is amazing',
-        resave: false,
-        saveUninitialized: true,
-        cookie: { secure: false }
-    })
-    // Express App Config
-app.use(express.json())
+    secret: 'coding is amazing',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+})
+// Express App Config
+app.use(express.json({ limit: "50mb" }));
 app.use(session)
 app.use(express.static('public'))
 
@@ -57,11 +57,11 @@ app.get('/**', (req, res) => {
 const logger = require('./services/logger.service')
 const port = process.env.PORT || 3030
 
-app.get('/**',(req, res)=>{
-    res.sendFile(path.join(__dirname, 'public','index.html'))
+app.get('/**', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-http.listen(port,()=>{
+http.listen(port, () => {
     console.log('App listening on port: ' + port)
 })
 
