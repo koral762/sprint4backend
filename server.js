@@ -42,6 +42,7 @@ app.get('/api/setup-session', (req, res) => {
     res.end()
 })
 
+
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/board', boardRoutes)

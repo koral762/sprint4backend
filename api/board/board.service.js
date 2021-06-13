@@ -46,11 +46,8 @@ async function getById(boardId) {
 
 async function add(board) {
     try {
-        const boardToAdd = {
-            // byUserId: ObjectId(board.byUserId),
-            // aboutUserId: ObjectId(board.aboutUserId),
-            txt: board.txt
-        }
+        const boardToAdd = board
+        console.log('back',board);
         const collection = await dbService.getCollection('board')
         await collection.insertOne(boardToAdd)
         return boardToAdd;
